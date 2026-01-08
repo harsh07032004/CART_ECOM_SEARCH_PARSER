@@ -1,6 +1,6 @@
 # CART | Future Commerce 🚀
 
-![CART Branding](https://raw.githubusercontent.com/harsh07032004/CART_ECOM_SEARCH_PARSER/main/frontend/public/placeholder.svg)
+![CART Branding](/frontend/public/preview.png)
 
 **CART** is a next-generation e-commerce platform that redefines product discovery through **Natural Language Processing (NLP)** and **Elasticsearch**. Unlike traditional keyword-matching stores, CART understands *user intent* (e.g., "blue running shoes under $100"), delivering precise, AI-powered results in milliseconds.
 
