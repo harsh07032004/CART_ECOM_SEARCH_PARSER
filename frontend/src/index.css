@@ -1,0 +1,119 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Sleek Modern Light Mode - Minimalist & Crisp */
+    --background: 210 40% 98%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    /* Vivid Electric Violet - The 'Nova' Color */
+    --primary: 250 95% 60%;
+    --primary-foreground: 210 40% 98%;
+    --primary-glow: 250 95% 75%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 250 95% 96%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 250 95% 60%;
+
+    --success: 142 70% 45%;
+    --success-foreground: 210 40% 98%;
+
+    /* Enhanced Gradients & Shadows */
+    --gradient-primary: linear-gradient(135deg, hsl(250 95% 60%), hsl(280 90% 60%));
+    --gradient-subtle: linear-gradient(180deg, hsl(210 40% 98%), hsl(220 30% 96%));
+
+    --shadow-elegant: 0 20px 40px -10px hsl(250 95% 60% / 0.15);
+    --shadow-product: 0 8px 30px -4px hsl(220 20% 10% / 0.1);
+
+    --transition-smooth: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 210 40% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    /* Deep Space Dark Mode */
+    --background: 230 25% 10%;
+    --foreground: 210 40% 98%;
+
+    --card: 230 20% 14%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 230 20% 14%;
+    --popover-foreground: 210 40% 98%;
+
+    /* Neon Indigo Glow */
+    --primary: 250 90% 65%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 230 20% 18%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 230 20% 18%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 250 90% 20%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 230 20% 18%;
+    --input: 230 20% 18%;
+    --ring: 250 90% 65%;
+
+    --shadow-elegant: 0 20px 40px -10px hsl(250 90% 65% / 0.25);
+    --shadow-product: 0 8px 30px -4px hsl(0 0% 0% / 0.4);
+
+    --sidebar-background: 230 25% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}

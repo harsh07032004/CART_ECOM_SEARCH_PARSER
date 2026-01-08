@@ -1,0 +1,85 @@
+version: '3.8'
+
+services:
+  # Backend API (FastAPI)
+  backend:
+    build: ./backend
+    container_name: ecom_backend
+    ports:
+      - "8000:8000"
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017
+      - MONGO_DB=ecommerce
+      - ES_HOST=http://elasticsearch:9200
+      - ES_INDEX=products
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - mongodb
+      - elasticsearch
+      - redis
+    restart: unless-stopped
+    networks:
+      - ecom_network
+
+  # Frontend (React + Vite)
+  frontend:
+    build: ./frontend
+    container_name: ecom_frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - VITE_API_URL=http://localhost:8000
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - ecom_network
+
+  # MongoDB Database
+  mongodb:
+    image: mongo:7
+    container_name: ecom_mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    restart: unless-stopped
+    networks:
+      - ecom_network
+
+  # Elasticsearch
+  elasticsearch:
+    image: elasticsearch:8.11.0
+    container_name: ecom_elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    restart: unless-stopped
+    networks:
+      - ecom_network
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: ecom_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    networks:
+      - ecom_network
+
+networks:
+  ecom_network:
+    driver: bridge
+
+volumes:
+  mongodb_data:
+  elasticsearch_data:
+  redis_data:
