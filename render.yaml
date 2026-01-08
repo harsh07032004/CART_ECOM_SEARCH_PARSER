@@ -4,7 +4,7 @@
 services:
   # Backend API (FastAPI)
   - type: web
-    name: cartella-api
+    name: cart-api
     runtime: python
     region: oregon
     plan: free
@@ -28,7 +28,7 @@ services:
     
   # Frontend (Static Site)
   - type: static
-    name: cartella-frontend
+    name: cart-frontend
     buildCommand: cd frontend && npm ci && npm run build
     staticPublishPath: frontend/dist
     headers:
@@ -38,7 +38,7 @@ services:
     envVars:
       - key: VITE_API_URL
         fromService:
-          name: cartella-api
+          name: cart-api
           type: web
           property: url
     routes:
