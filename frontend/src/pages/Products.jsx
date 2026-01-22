@@ -22,7 +22,7 @@ import gamingmouseImage from "@/assets/gamingmouseImage.jpeg";
 import denimjacketImage from "@/assets/denimjacketImage.jpeg";
 
 const Products = () => {
-  const { products, rateProduct, searchProducts, fetchProducts } = useProducts();
+  const { products, rateProduct, searchProducts, fetchProducts, loading } = useProducts();
   const { addToCart, getCartCount } = useCart();
   const [searchParams] = useSearchParams();
   const [filteredProducts, setFilteredProducts] = useState(products);
@@ -99,6 +99,14 @@ const Products = () => {
       description: `${product.name} has been added to your cart.`,
     });
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">

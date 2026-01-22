@@ -219,15 +219,32 @@ def parse_query(query):
                  result["category"] = norm_token
                  continue
 
-            if cat_token in CATEGORIES:
-                result["category"] = cat_token
-                continue
-            if cat_lemma in CATEGORIES:
-                result["category"] = cat_lemma
-                continue
-            cat = fuzzy_match(cat_lemma, CATEGORIES)
-            if cat:
-                result["category"] = cat
+            cat_lemma = nlp(norm_token)[0].lemma_
+            
+            # Check if this lemma matches any RAW_CATEGORY's lemma
+            # This handles "shoe" -> "shoes" mapping
+            found_raw_cat = None
+            for raw_cat in RAW_CATEGORIES:
+                 if nlp(raw_cat)[0].lemma_ == cat_lemma:
+                      found_raw_cat = raw_cat
+                      break
+            
+            if found_raw_cat:
+                 result["category"] = found_raw_cat
+                 continue
+
+            # Fuzzy Match against LEMMAS (CATEGORIES)
+            # If we match a lemma, we must map it back to the RAW_CATEGORY
+            cat_fuzzy_lemma = fuzzy_match(cat_lemma, CATEGORIES)
+            if cat_fuzzy_lemma:
+                # Map back to raw
+                found_raw_cat = None
+                for raw_cat in RAW_CATEGORIES:
+                     if nlp(raw_cat)[0].lemma_ == cat_fuzzy_lemma:
+                          found_raw_cat = raw_cat
+                          break
+                
+                result["category"] = found_raw_cat if found_raw_cat else cat_fuzzy_lemma
                 continue
 
         # Color

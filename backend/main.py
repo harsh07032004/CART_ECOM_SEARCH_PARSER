@@ -28,16 +28,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.on_event("startup")
-async def startup_event():
-    init_es_index()
-    
-    # Refresh NLP Knowledge Base from DB
+import asyncio
+
+async def load_nlp_data():
+    """Background task to load Synonyms and Entities."""
+    print("Startup: Initializing NLP Knowledge Base in background...")
     try:
         from app.db import es_client, settings
         from app.utils.query_parser import update_entities, load_synonyms_from_db
         
-        # 1. Load Synonyms (Critical for correct parsing)
+        # 1. Load Synonyms
         load_synonyms_from_db()
         
         # 2. Load Brands/Categories
@@ -61,6 +61,12 @@ async def startup_event():
             
     except Exception as e:
         print(f"Warning: Failed to load dynamic entities on startup: {e}")
+
+@app.on_event("startup")
+async def startup_event():
+    init_es_index()
+    # Run NLP update in background so it doesn't block startup
+    asyncio.create_task(load_nlp_data())
 
 # Register Routes
 app.include_router(product_routes.router)

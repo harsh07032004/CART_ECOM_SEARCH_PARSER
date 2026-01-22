@@ -17,22 +17,26 @@ es_client = Elasticsearch(settings.ES_HOST)
 def init_es_index():
     """Ensures the Elasticsearch index exists with proper mapping."""
     if not es_client.indices.exists(index=settings.ES_INDEX):
-        es_client.indices.create(
-            index=settings.ES_INDEX,
-            body={
-                "mappings": {
-                    "properties": {
-                        "name": {"type": "text"},
-                        "description": {"type": "text"},
-                        "category": {"type": "keyword"},
-                        "brand": {"type": "keyword"},
-                        "price": {"type": "float"},
-                        "image_url": {"type": "keyword"},
-                        "created_at": {"type": "date"}
+        try:
+            es_client.indices.create(
+                index=settings.ES_INDEX,
+                body={
+                    "mappings": {
+                        "properties": {
+                            "name": {"type": "text"},
+                            "description": {"type": "text"},
+                            "category": {"type": "keyword"},
+                            "brand": {"type": "keyword"},
+                            "price": {"type": "float"},
+                            "image_url": {"type": "keyword"},
+                            "created_at": {"type": "date"}
+                        }
                     }
                 }
-            }
-        )
+            )
+            print(f"Index '{settings.ES_INDEX}' created.")
+        except Exception as e:
+            print(f"Error creating index: {e}")
     else:
-        # Update existing index mapping if field is missing - SKIP VECTOR UPDATE
-        pass
+        print(f"Index '{settings.ES_INDEX}' already exists.")
+

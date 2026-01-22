@@ -148,7 +148,7 @@ class ProductService:
         return results
 
     @staticmethod
-    def get_all_products(limit: int = 500):
+    def get_all_products(limit: int = 50):
         # Fallback to Mongo or Match All in ES. Let's use ES for consistency.
         res = es_client.search(index=settings.ES_INDEX, body={"query": {"match_all": {}}, "size": limit})
         results = []
