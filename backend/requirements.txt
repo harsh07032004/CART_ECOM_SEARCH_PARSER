@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+numpy
+spacy
+pymongo
+elasticsearch
+pydantic-settings
+python-dotenv
+requests

@@ -31,6 +31,7 @@ coverage/
 # Logs and Debug
 *.log
 *.txt
+!requirements.txt
 debug_*.py
 test_*.py
 check_*.py
