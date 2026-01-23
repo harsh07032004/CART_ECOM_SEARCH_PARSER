@@ -7,3 +7,4 @@ elasticsearch
 pydantic-settings
 python-dotenv
 requests
+rapidfuzz
