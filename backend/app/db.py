@@ -29,7 +29,12 @@ def init_es_index():
                             "brand": {"type": "keyword"},
                             "price": {"type": "float"},
                             "image_url": {"type": "keyword"},
-                            "created_at": {"type": "date"}
+                            "created_at": {"type": "date"},
+                            "rating": {"type": "float"},
+                            "discount": {"type": "integer"},
+                            "stock": {"type": "integer"},
+                            "color": {"type": "keyword"},
+                            "gender": {"type": "keyword"}
                         }
                     }
                 }

@@ -291,7 +291,7 @@ def parse_query(query):
 # Optional: test
 if __name__ == "__main__":
     sample_queries = [
-        "black puma sneakers for men under 3000"
+        "shirt for men under 3000"
     ]
 
     for q in sample_queries:

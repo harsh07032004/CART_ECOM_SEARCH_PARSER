@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 import numpy as np
 if not hasattr(np, 'float_'):
     np.float_ = np.float64
-from app.db import product_collection, es_client, settings
+from app.db import product_collection, es_client, settings, init_es_index
 from bson import ObjectId
 
 COUNT = 500
@@ -143,9 +143,13 @@ def seed():
     print("Clearing existing products...")
     product_collection.delete_many({})
     try:
-        es_client.delete_by_query(index=settings.ES_INDEX, body={"query": {"match_all": {}}})
-    except:
-        pass
+        es_client.indices.delete(index=settings.ES_INDEX, ignore=[400, 404])
+        print(f"Deleted index {settings.ES_INDEX}")
+    except Exception as e:
+        print(f"Error deleting index: {e}")
+    
+    # Re-create index with proper mapping
+    init_es_index()
     
     print(f"Generating and inserting {COUNT} products...")
     products = []
