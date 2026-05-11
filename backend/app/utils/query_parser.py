@@ -181,7 +181,6 @@ def update_entities(new_brands=None, new_categories=None):
 
 
 def add_synonyms(field: str, key: str, new_synonyms: list):
-    global SYNONYM_MAP
     from app.db import synonym_collection
 
     if field not in SYNONYM_MAP:
@@ -204,7 +203,6 @@ def add_synonyms(field: str, key: str, new_synonyms: list):
 
 
 def load_synonyms_from_db():
-    global SYNONYM_MAP
     from app.db import synonym_collection
     try:
         for doc in synonym_collection.find({}):
