@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { api } from '@/lib/api';
 import { toast } from 'sonner';
 
@@ -6,103 +6,115 @@ const ProductsContext = createContext(undefined);
 
 export const useProducts = () => {
   const context = useContext(ProductsContext);
-  if (!context) {
-    throw new Error('useProducts must be used within a ProductsProvider');
-  }
+  if (!context) throw new Error('useProducts must be used within a ProductsProvider');
   return context;
 };
 
 export const ProductsProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isSearching, setIsSearching] = useState(false);
+  const [lastQuery, setLastQuery] = useState('');
 
-  // Initial Fetch
-  useEffect(() => {
-    fetchProducts();
-  }, []);
-
-  const fetchProducts = async () => {
+  const fetchProducts = useCallback(async () => {
     setLoading(true);
     try {
       const data = await api.getAll();
       setProducts(data);
     } catch (error) {
-      console.error("Failed to fetch products", error);
-      toast.error("Failed to load products");
+      console.error('Failed to fetch products', error);
+      toast.error('Failed to load products. Please try again.');
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const searchProducts = async (query) => {
-    setLoading(true);
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
+
+  const searchProducts = useCallback(async (query) => {
+    if (!query || !query.trim()) {
+      setLastQuery('');
+      return fetchProducts();
+    }
+    setLastQuery(query.trim());
+    setIsSearching(true);
     try {
-      if (!query.trim()) {
-        return fetchProducts();
-      }
-      const data = await api.search(query);
+      const data = await api.search(query.trim());
       setProducts(data);
     } catch (error) {
-      console.error("Search failed", error);
-      toast.error("Search failed");
+      console.error('Search failed', error);
+      toast.error('Search failed. Please try again.');
     } finally {
-      setLoading(false);
+      setIsSearching(false);
     }
-  };
+  }, [fetchProducts]);
 
-  const addProduct = async (productData) => {
+  const addProduct = useCallback(async (productData) => {
     try {
       const newProduct = await api.create(productData);
       setProducts(prev => [newProduct, ...prev]);
+      toast.success(`"${newProduct.name}" added successfully!`);
       return newProduct;
     } catch (error) {
-      console.error("Failed to add product", error);
-      toast.error("Failed to add product");
+      console.error('Failed to add product', error);
+      toast.error(`Failed to add product: ${error.message}`);
       throw error;
     }
-  };
+  }, []);
 
-  const updateProduct = async (id, productData) => {
-    // Optimistic update for now - Backend update not fully implemented in plan
-    setProducts(prev => prev.map(product => 
-      product.id === id ? { ...product, ...productData, updatedAt: new Date() } : product
-    ));
-  };
+  const updateProduct = useCallback(async (id, productData) => {
+    try {
+      const updated = await api.update(id, productData);
+      setProducts(prev => prev.map(p => p.id === id ? updated : p));
+      toast.success('Product updated successfully!');
+      return updated;
+    } catch (error) {
+      console.error('Failed to update product', error);
+      toast.error(`Failed to update: ${error.message}`);
+      throw error;
+    }
+  }, []);
 
-  const deleteProduct = async (id) => {
-    // Optimistic delete
-    setProducts(prev => prev.filter(product => product.id !== id));
-  };
+  const deleteProduct = useCallback(async (id) => {
+    // Optimistic removal
+    setProducts(prev => prev.filter(p => p.id !== id));
+    try {
+      await api.delete(id);
+      toast.success('Product deleted.');
+    } catch (error) {
+      console.error('Failed to delete product', error);
+      toast.error(`Delete failed: ${error.message}`);
+      // Re-fetch to restore correct state
+      fetchProducts();
+    }
+  }, [fetchProducts]);
 
-  const rateProduct = async (productId, rating) => {
-    // Optimistic rating
-    const newRating = {
-      userId: `user${Date.now()}`,
-      rating,
-      timestamp: new Date()
-    };
-
+  const rateProduct = useCallback(async (productId, rating) => {
+    const newRating = { userId: `user${Date.now()}`, rating, timestamp: new Date() };
     setProducts(prev => prev.map(product => {
       if (product.id === productId) {
-        return {
-          ...product,
-          userRatings: [...(product.userRatings || []), newRating]
-        };
+        const updatedRatings = [...(product.userRatings || []), newRating];
+        const avg = updatedRatings.reduce((s, r) => s + r.rating, 0) / updatedRatings.length;
+        return { ...product, userRatings: updatedRatings, rating: Math.round(avg * 10) / 10 };
       }
       return product;
     }));
-  };
+  }, []);
 
   return (
-    <ProductsContext.Provider value={{ 
-      products, 
+    <ProductsContext.Provider value={{
+      products,
       loading,
-      addProduct, 
-      updateProduct, 
-      deleteProduct, 
+      isSearching,
+      lastQuery,
+      addProduct,
+      updateProduct,
+      deleteProduct,
       rateProduct,
       searchProducts,
-      fetchProducts 
+      fetchProducts,
     }}>
       {children}
     </ProductsContext.Provider>
