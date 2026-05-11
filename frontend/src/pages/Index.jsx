@@ -91,7 +91,7 @@ export default function Index() {
       <Header onSearch={onSearch} cartCount={getCartCount()} />
 
       {/* ══ HERO ══ */}
-      <section className="relative min-h-[92vh] flex items-center overflow-hidden" style={{ background: "linear-gradient(135deg, #dbeafe 0%, #ede9fe 35%, #e0e7ff 65%, #dbeafe 100%)" }}>
+      <section className="relative min-h-[92vh] flex items-center overflow-hidden pt-24" style={{ background: "linear-gradient(135deg, #dbeafe 0%, #ede9fe 35%, #e0e7ff 65%, #dbeafe 100%)" }}>
         {/* Vivid blobs — needed so glass blur has colour to refract */}
         <div className="blob w-[560px] h-[560px] top-[-100px] left-[-80px]" style={{ background: "radial-gradient(circle, rgba(99,102,241,0.30) 0%, rgba(139,92,246,0.18) 40%, transparent 70%)" }} />
         <div className="blob w-[480px] h-[480px] bottom-[-60px] right-[-60px]" style={{ background: "radial-gradient(circle, rgba(59,130,246,0.28) 0%, rgba(99,102,241,0.16) 40%, transparent 70%)" }} />
@@ -101,11 +101,11 @@ export default function Index() {
         {/* Subtle dot grid */}
         <div className="absolute inset-0 pointer-events-none opacity-30" style={{ backgroundImage: "radial-gradient(rgba(99,102,241,0.15) 1px,transparent 1px)", backgroundSize: "28px 28px" }} />
 
-        <div className="relative z-10 section-inner pt-48 pb-32 grid lg:grid-cols-2 gap-16 items-center">
+        <div className="relative z-10 section-inner pt-16 pb-32 grid lg:grid-cols-2 gap-16 items-center">
           {/* LEFT — text + search */}
           <div>
             <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-widest mb-8 mt-[5px]"
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-widest mb-8 mt-2"
               style={{ background: "rgba(99,102,241,0.10)", color: "#4F46E5", border: "1px solid rgba(99,102,241,0.20)", backdropFilter: "blur(12px)" }}>
               <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse-soft" />
               NLP-Powered Search Engine
